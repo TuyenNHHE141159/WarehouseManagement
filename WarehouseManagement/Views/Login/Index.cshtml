@@ -1,0 +1,31 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@{
+    string msg = @ViewBag.Message;
+}
+<form asp-action="Login">
+<table>
+    <tr>
+        <td>Username</td>
+            <td>
+                <input type="text" name="username" />
+            </td>
+    </tr>
+    <tr>
+            <td>Password</td>
+            <td>
+                <input type="password" name="password" />
+            </td>
+                  
+    </tr>
+</table>
+    @if (msg != null)
+    {
+        <h3>@msg</h3>
+    }
+    <button type="submit">Login</button>
+   
+</form>

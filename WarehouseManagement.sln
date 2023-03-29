@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WarehouseManagement", "WarehouseManagement\WarehouseManagement.csproj", "{3CF7A6D9-C4CF-41A1-881F-870E2B1ADF37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{1CB4CD62-AB00-4033-89C6-8C00F1F6FE74}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3CF7A6D9-C4CF-41A1-881F-870E2B1ADF37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CF7A6D9-C4CF-41A1-881F-870E2B1ADF37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CF7A6D9-C4CF-41A1-881F-870E2B1ADF37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CF7A6D9-C4CF-41A1-881F-870E2B1ADF37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CB4CD62-AB00-4033-89C6-8C00F1F6FE74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CB4CD62-AB00-4033-89C6-8C00F1F6FE74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CB4CD62-AB00-4033-89C6-8C00F1F6FE74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CB4CD62-AB00-4033-89C6-8C00F1F6FE74}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {343D3E5C-989A-4EC6-94E9-747F3ABDFE16}
+	EndGlobalSection
+EndGlobal

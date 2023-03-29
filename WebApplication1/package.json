@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "autocomplete-js": "^2.7.1",
+    "jquery": "~3.6.0",
+    "jquery-ui": "~1.13.2"
+  }
+}

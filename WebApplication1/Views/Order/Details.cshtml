@@ -1,0 +1,42 @@
+﻿
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Order</h4>
+    <hr />
+    <table style="width:100%">
+        <tr>
+            <td>OrderID</td>
+            <td>OrderType</td>
+            <td>OrderDate</td>
+            <td>OrderBy</td>
+            <td>Product Name</td>
+            <td>Quantiy</td>
+            <td>Price</td>
+        </tr>
+        @foreach (var o in ViewBag.OrderD)
+        {
+            <tr>
+                <td>@o.OrderID</td>
+                <td>@o.OrderType</td>
+                <td>@o.OrderDate?.ToString("dd/MM/yyyy")</td>
+                <td>@o.OrderBy</td>
+                <td>@o.ProductName</td>
+                <td>@o.Quantiy</td>
+                <td>@o.Price</td>
+            </tr>
+            
+        }
+    </table>
+   
+</div>
+
+<div>
+    
+    <a asp-action="Index">Back to List</a>
+</div>

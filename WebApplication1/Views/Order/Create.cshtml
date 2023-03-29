@@ -1,0 +1,176 @@
+﻿<!DOCTYPE html>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <!-- Thư viện jQuery -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<h1>Thêm Đơn Hàng</h1>
+<form id="order-form">
+    <table style="width:40%">
+        <tr>
+            <td>Type:</td>
+            <td>
+                <select id="select">
+                    <option value="import">Import</option>
+                    <option value="export">Export</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="product">Sản phẩm:</label></td>
+            <td> <input type="text" id="product"></td>
+        </tr>
+        <tr>
+            <td><label for="price">Giá:</label></td>
+            <td><input type="number" id="price" min="1" pattern="[0-9]+(\.[0-9]+)?" required></td>
+        </tr>
+        <tr>
+            <td>  <label for="quantity">Số lượng:</label></td>
+            <td> <input type="number" id="quantity" min="1" step="1" pattern="[0-9]+" required></td>
+        </tr>
+        
+        <input type="hidden" id="productIdHidden" name="productIdHidden">
+    </table>
+    <br />
+    <button type="button" onclick="addOrder()">Thêm</button>
+</form>
+<table id="order-table" style="width:40%">
+    <thead>
+        <tr>
+            <th>Sản phẩm</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+    </tbody>
+</table>
+Tổng tiền: <input readonly id="cost" name="cost" value="">
+<br />
+<button id="submitOrder">Lưu</button>
+<script>
+    const productList = [];
+    const productIdInput = document.getElementById('product');
+    const productIdInputHidden = document.getElementById('productIdHidden');
+    var cost=0;
+    productIdInput.addEventListener("input", function (event) {
+        const keyword = event.target.value;
+
+        $.ajax({
+            url: "/Order/GetProducts",
+            type: "GET",
+            data: { keyword: keyword },
+            success: function (response) {
+                // Xử lý kết quả trả về
+                console.log(response);
+                $("#product").autocomplete({
+                    source: response,
+                    select: function (event, ui) {
+                        // Cập nhật giá trị của ô input "productId" với giá trị "label" của phần tử được chọn
+                        $("#product").val(ui.item.label.trim());
+                        productIdInputHidden.value = ui.item.value;
+                        $("#productIdHidden").val(ui.item.value);
+                        console.log(productIdInputHidden.value);
+                        return false;
+                    }
+                });
+            },
+            error: function () {
+                // Xử lý lỗi
+                console.log("Error");
+            },
+        });
+    });
+    function addOrder() {
+        // Lấy thông tin sản phẩm, giá và số lượng từ form
+        var product = document.getElementById("product").value;
+        var price = document.getElementById("price").value;
+        var quantity = document.getElementById("quantity").value;
+     
+        // Kiểm tra nếu có bất kỳ trường nào trống thì hiển thị thông báo và dừng hàm
+        if (!product || !price || !quantity) {
+            alert("Vui lòng nhập đầy đủ thông tin đơn hàng");
+           
+        }
+        else if (productIdHidden.value==="") {
+            document.getElementById("product").value = "";
+            document.getElementById("price").value = "";
+            document.getElementById("quantity").value = "";
+            alert("Sản phẩm ko tồn tại");
+        }
+        else {
+            const producto = {
+                productId: productIdHidden.value,
+                quantity: quantity,
+                price: price
+            };
+            console.log("Product đc thêm có id " + productIdHidden.value);
+            productList.push(producto);
+            // Tạo một hàng mới cho bảng
+            var row = document.createElement("tr");
+
+            // Thêm các ô cho hàng
+            var productCell = document.createElement("td");
+            productCell.textContent = product;
+            row.appendChild(productCell);
+
+            var priceCell = document.createElement("td");
+            priceCell.textContent = price;
+            row.appendChild(priceCell);
+
+            var quantityCell = document.createElement("td");
+            quantityCell.textContent = quantity;
+            row.appendChild(quantityCell);
+
+            // Thêm hàng vào bảng
+            var table = document.getElementById("order-table").getElementsByTagName("tbody")[0];
+            table.appendChild(row);
+
+            // Xóa các giá trị khỏi form
+            document.getElementById("product").value = "";
+            document.getElementById("price").value = "";
+            document.getElementById("quantity").value = "";
+            //tính tổng tiền
+            cost += price*quantity;
+            $("#cost").val(cost);
+        }
+    }
+    var selectElement = document.getElementById("select");
+    var selectedItem = selectElement.value;
+    $(document).ready(function () {
+        // Bắt sự kiện khi thay đổi giá trị trong thẻ select
+        $("#select").change(function () {
+            // Lấy giá trị được chọn
+            selectedItem = $(this).val();
+            // Xử lý giá trị được chọn
+            console.log("Giá trị được chọn là: " + selectedItem);
+        });
+    });
+    $(document).ready(function () {
+        // Bắt sự kiện click vào nút "Lưu"
+        $("#submitOrder").click(function () {
+            console.log("Type " + selectedItem);
+            // Gửi request POST đến URL "/Order/Save" với dữ liệu là productList
+            $.ajax({
+                url: "/Order/Save",
+                type: "POST",
+                data: JSON.stringify({ orderDetails: productList, selectedItem: selectedItem }),
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    // Xử lý kết quả trả về từ server (nếu cần)
+                    console.log("controller trả về" + response);
+                    alert("Thêm thành công");
+                    window.location.href = "/Order/Index";
+                },
+                error: function (xhr, status, error) {
+                    // Xử lý lỗi
+                    alert("Lưu không thành công");
+                    console.log("Lỗi: " + error);
+                    console.log(xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
