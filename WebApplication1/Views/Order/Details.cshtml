@@ -3,12 +3,14 @@
 @{
     ViewData["Title"] = "Details";
 }
-
-
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<!-- Thư viện jQuery -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <div class="container">
     @Html.Partial("~/Views/Header/Header.cshtml")
     <h1>Chi tiết hóa đơn</h1>
@@ -18,7 +20,7 @@
             <td>Mã Đơn hàng</td>
             <td>Kiểu đơn hàng</td>
             <td>Ngày tạo hóa đơn</td>
-            <td>NGười tạo</td>
+          
             <td>Tên sản phẩm</td>
             <td>Số Lượng</td>
             <td>Giá cả</td>
@@ -29,7 +31,7 @@
                 <td>@o.OrderID</td>
                 <td>@(o.OrderType.Trim() == "import" ? "nhập kho" : "xuất kho")</td>
                 <td>@o.OrderDate?.ToString("dd/MM/yyyy")</td>
-                <td>@o.OrderBy</td>
+                
                 <td>@o.ProductName</td>
                 <td>@o.Quantiy</td>
                 <td>@o.Price</td>
