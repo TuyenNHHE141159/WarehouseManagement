@@ -1,3 +1,4 @@
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -25,6 +26,11 @@ namespace WebApplication1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+           .AddCookie(options =>
+           {
+               options.LoginPath = "/Login"; // Đường dẫn của trang đăng nhập      
+           });
             services.AddDbContext<ProductWarehouseContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("MyDB")));
             services.AddScoped(typeof(ProductWarehouseContext));
@@ -49,9 +55,11 @@ namespace WebApplication1
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            // Các middleware khác
+            app.UseAuthentication();
             app.UseAuthorization();
 
+           // app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

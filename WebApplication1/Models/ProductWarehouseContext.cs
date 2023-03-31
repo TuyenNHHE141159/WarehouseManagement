@@ -17,9 +17,12 @@ namespace WebApplication1.Models
         {
         }
 
+        public virtual DbSet<Account> Accounts { get; set; }
+        public virtual DbSet<AccountRole> AccountRoles { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderProduct> OrderProducts { get; set; }
         public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -33,6 +36,51 @@ namespace WebApplication1.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+            modelBuilder.Entity<Account>(entity =>
+            {
+                entity.ToTable("Account");
+
+                entity.HasIndex(e => e.Username, "uq_username")
+                    .IsUnique();
+
+                entity.Property(e => e.AccountId).HasColumnName("account_id");
+
+                entity.Property(e => e.Password)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .HasColumnName("password")
+                    .IsFixedLength(true);
+
+                entity.Property(e => e.Username)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .HasColumnName("username")
+                    .IsFixedLength(true);
+            });
+
+            modelBuilder.Entity<AccountRole>(entity =>
+            {
+                entity.HasKey(e => new { e.AccountId, e.RoleId });
+
+                entity.ToTable("Account_Role");
+
+                entity.Property(e => e.AccountId).HasColumnName("account_id");
+
+                entity.Property(e => e.RoleId).HasColumnName("role_id");
+
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.AccountRoles)
+                    .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Account_Role_Account");
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.AccountRoles)
+                    .HasForeignKey(d => d.RoleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Account_Role_Role");
+            });
 
             modelBuilder.Entity<Order>(entity =>
             {
@@ -64,15 +112,9 @@ namespace WebApplication1.Models
 
                 entity.Property(e => e.ProductId).HasColumnName("product_id");
 
-                entity.Property(e => e.Price)
-                    .HasMaxLength(10)
-                    .HasColumnName("price")
-                    .IsFixedLength(true);
+                entity.Property(e => e.Price).HasColumnName("price");
 
-                entity.Property(e => e.Quantity)
-                    .HasMaxLength(10)
-                    .HasColumnName("quantity")
-                    .IsFixedLength(true);
+                entity.Property(e => e.Quantity).HasColumnName("quantity");
 
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.OrderProducts)
@@ -99,6 +141,18 @@ namespace WebApplication1.Models
                     .IsFixedLength(true);
 
                 entity.Property(e => e.QuantityInStock).HasColumnName("quantity_in_stock");
+            });
+
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.ToTable("Role");
+
+                entity.Property(e => e.RoleId).HasColumnName("role_id");
+
+                entity.Property(e => e.RoleName)
+                    .HasMaxLength(10)
+                    .HasColumnName("role_name")
+                    .IsFixedLength(true);
             });
 
             OnModelCreatingPartial(modelBuilder);

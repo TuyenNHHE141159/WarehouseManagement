@@ -2,31 +2,43 @@
 
 @{
     ViewData["Title"] = "Index";
+    string username = @ViewBag.Session;
 }
-
-<h1>List</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <!-- Thư viện jQuery -->
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-<table class="table" style="width:40%">
-    <thead>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
+<div class="container">
+    @Html.Partial("~/Views/Header/Header.cshtml")
+    <h1>Danh sách đơn hàng</h1>
+    <p>
+        <a asp-action="Create">Tạo đơn hàng</a>
+    </p>
+    <div>
+    @if (username != null)
+    {
+        <h3 style="color:red">Xin chào @username</h3>
+        <a href="/Login/Logout">Đăng xuất</a>
+    }
+    </div>
+<table class="table" style="width:100%">
+        <thead class="table-light">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Id)
+               Mã Đơn hàng
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.OrderType)
+                Loại đơn hàng
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.OrderDate)
+                Ngày tạo đơn
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedBy)
+                Người tạo đơn
             </th>
             <th></th>
         </tr>
@@ -37,9 +49,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Id)
                 </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OrderType)
-            </td>
+
+                    <td>@(item.OrderType.Trim() == "import" ? "nhập kho" : "xuất kho")</td>
+         
             <td>
                 @item.OrderDate?.ToString("dd/MM/yyyy").Trim()
             </td>
@@ -48,9 +60,14 @@
             </td>
             <td>
                 
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
+                <a asp-action="Details" asp-route-id="@item.Id">Xem chi tiết</a> 
                
             </td>
+                    <td>
+
+                        <a asp-action="Edit" asp-route-id="@item.Id" asp-route-type="@item.OrderType.Trim()">Chỉnh sửa</a>
+
+                    </td>
         </tr>
 }
     </tbody>
@@ -59,7 +76,7 @@
     <div class="pagination">
         @if (ViewBag.CurrentPage > 1)
         {
-            <a href="@Url.Action("Index", new { page = ViewBag.CurrentPage - 1, pageSize = ViewBag.PageSize })">Previous</a>
+            <a href="@Url.Action("Index", new { page = ViewBag.CurrentPage - 1, pageSize = ViewBag.PageSize })">Trước</a>
         }
 
         @for (int i = 1; i <= ViewBag.TotalPages; i++)
@@ -70,14 +87,15 @@
             }
             else
             {
-                <a href="@Url.Action("Index", new { page = i, pageSize = ViewBag.PageSize })">@i</a>
+                    <a style="margin-left:3px; margin-right:3px" class="page-item" href="@Url.Action("Index", new { page = i, pageSize = ViewBag.PageSize })">@i</a>
             }
         }
 
         @if (ViewBag.CurrentPage < ViewBag.TotalPages)
         {
-            <a href="@Url.Action("Index", new { page = ViewBag.CurrentPage + 1, pageSize = ViewBag.PageSize })">Next</a>
+            <a href="@Url.Action("Index", new { page = ViewBag.CurrentPage + 1, pageSize = ViewBag.PageSize })">Tiếp</a>
         }
     </div>
 
+</div>
 </div>

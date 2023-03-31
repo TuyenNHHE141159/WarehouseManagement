@@ -1,0 +1,46 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model IEnumerable<WebApplication1.Models.DTO.ReportProductQuantity>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<!-- Thư viện jQuery -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<div class="container">
+    @Html.Partial("~/Views/Header/Header.cshtml")
+   
+ 
+    <h1>@(ViewBag.Type.Trim() == "import" ? "Nhập kho" : "Xuất kho")</h1>
+    <table class="table table-success table-striped">
+        <tr>
+            <th>#</th>
+            <th>Năm</th>
+            <th>Tháng</th>
+            <th>Tên sản phẩm</th>
+            <th>Tổng số lượng </th>
+        </tr>
+        @foreach (var (index, o) in Model.Select((item, index) => (index + 1, item)))
+        {
+            <tr>
+                <td>@index</td>
+                <td>@o.Year</td>
+                <td>@o.Month</td>
+                <td>@o.ProductName</td>
+                <td>@o.TotalQuantity</td>
+            </tr>
+        }
+    </table>
+   
+</div>
+<script>
+    const selectElement = document.getElementById("select");
+
+    // Lấy giá trị option được chọn
+    selectElement.addEventListener("change", function () {
+        // Lấy giá trị của option được chọn
+       
+    }
+   
+</script>

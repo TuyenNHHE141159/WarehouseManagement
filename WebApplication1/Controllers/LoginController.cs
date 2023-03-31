@@ -1,18 +1,20 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using WarehouseManagement.Models;
+using WebApplication1.Models;
 
-namespace WarehouseManagement.Controllers
+namespace WebApplication1.Controllers
 {
     public class LoginController : Controller
     {
-        WarehouseContext context = new WarehouseContext();
-     DAO dao= new DAO();
+        DAO dao= new DAO();
         public IActionResult Index()
         {
-
             return View();
+        }
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Remove("username");
+            return View("Index","Login");
         }
         [HttpPost]
         public IActionResult Login(string username, string password)
@@ -22,14 +24,14 @@ namespace WarehouseManagement.Controllers
             if (account == null)
             {
                 ViewBag.Message = "Login failed";
-                return View("Index","Login");
+                return View("Index", "Login");
             }
             else
             {
-               
-                return RedirectToAction("Index", "Flower");
+                //HttpContext.Session.SetString("username", username);
+                return RedirectToAction("Index", "Order");
             }
-             
+
         }
     }
 }

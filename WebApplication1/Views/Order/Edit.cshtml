@@ -1,25 +1,23 @@
-﻿<!DOCTYPE html>
+﻿@model WebApplication1.Models.OrderModel
+<!DOCTYPE html>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
-   
+
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <!-- Thư viện jQuery -->
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-    <div class="container">
+<!-- Thư viện jQuery -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<div class="container">
     @Html.Partial("~/Views/Header/Header.cshtml")
-    <h1>Thêm Đơn Hàng</h1>
+    <h1>Sửa Đơn Hàng</h1>
     <form id="order-form">
         <table style="width:100%">
             <tr>
                 <td>Kiểu:</td>
                 <td>
-                    <select id="select" style="width:fit-content" class="form-select">
-                        <option value="import">Nhập kho</option>
-                        <option value="export">Xuất kho</option>
-                    </select>
+                    <input type="text" id="type" readonly value="@Model.SelectedItem">
                 </td>
             </tr>
             <tr>
@@ -40,7 +38,7 @@
         <br />
         <button type="button" onclick="addOrder()">Thêm</button>
     </form>
-    <table id="order-table" class="table" style="width:100%">
+    <table id="oldLisst" class="table" style="display:none">
         <thead class="table-light">
             <tr>
                 <th>Sản phẩm</th>
@@ -49,19 +47,72 @@
             </tr>
         </thead>
         <tbody>
+            @foreach (var o in Model.OrderDetails)
+            {
+                <tr>
+                    <td>@o.productId</td>
+                    <td>@o.quantity</td>
+                    <td>@o.price</td>
+                    <td>@o.total()</td>
+                    <td>@Model.OrderId</td>
+                </tr>
+            }
         </tbody>
     </table>
+    <table id="order-table" class="table" style="width:100%">
+        <thead class="table-light">
+            <tr>               
+                <th>Sản phẩm</th>
+                <th>Giá(VNĐ)</th>
+                <th>Số lượng</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var (index, o) in Model.OrderDetails.Select((item, index) => (index + 1, item)))
+            {
+                <tr>      
+                    <td>@o.productName</td>
+                    <td>@o.quantity</td>
+                    <td>@o.price</td>
+                    <td><button value="@o.productId" id="productIdDelete_@o.productId">Xóa</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
     Tổng tiền: <input readonly id="cost" name="cost" value="">
     <br />
-    <button id="submitOrder">Lưu</button>
-    </div>
-
-
+    <button id="submitOrder" class="btn btn-primary">Lưu</button>
+</div>
 <script>
-    const productList = [];
+    let productList = [];
+
+    const table = document.getElementById('oldLisst'); // get a reference to the table element
+    const rows = table.getElementsByTagName('tr'); // get all rows of the table
+    var totalOld=0;
+    var orderId=null;
+    // iterate through each row (skipping the header row)
+    for (let i = 1; i < rows.length; i++) {
+        const cells = rows[i].getElementsByTagName('td'); // get the cells of the current row
+        const productId = cells[0].textContent; // get the text content of the first cell
+        const quantity = parseInt(cells[1].textContent); // parse the text content of the second cell as an integer
+        const price = parseInt(cells[2].textContent); // parse the text content of the third cell as an integer
+        totalOld += parseFloat(cells[3].textContent);
+        orderId = parseInt(cells[4].textContent);
+        productList.push({ productId, quantity, price }); // add an object representing the current row to the array
+    }
+
+    console.log(productList);
+
+
+    const type = document.getElementById('type');
     const productIdInput = document.getElementById('product');
     const productIdInputHidden = document.getElementById('productIdHidden');
-    var cost=0;
+    var cost = 0;
+    cost = totalOld;
+    const formattedNumber1 = cost.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+    $("#cost").val(formattedNumber1);
     productIdInput.addEventListener("input", function (event) {
         const keyword = event.target.value;
 
@@ -96,19 +147,19 @@
         var price = document.getElementById("price").value;
         priceReal = parseInt(price.replace(/,/g, ''));
         var quantity = document.getElementById("quantity").value;
-     
+
         // Kiểm tra nếu có bất kỳ trường nào trống thì hiển thị thông báo và dừng hàm
         if (!product || !price || !quantity) {
             alert("Vui lòng nhập đầy đủ thông tin đơn hàng");
-           
+
         }
-        else if (productIdHidden.value==="") {
+        else if (productIdHidden.value === "") {
             document.getElementById("product").value = "";
             document.getElementById("price").value = "";
             document.getElementById("quantity").value = "";
             alert("Sản phẩm ko tồn tại");
         }
-        else {        
+        else {
             const producto = {
                 productId: productIdHidden.value,
                 quantity: quantity,
@@ -132,6 +183,13 @@
             quantityCell.textContent = quantity;
             row.appendChild(quantityCell);
 
+            var buttonDelete=document.createElement("button");
+            buttonDelete.value = productIdHidden.value;
+            buttonDelete.textContent = "Xóa";
+            buttonDelete.id = "productIdDelete_" + productIdHidden.value;
+            var rowButtonDeleteCell=document.createElement("td");
+            rowButtonDeleteCell.appendChild(buttonDelete);
+            row.appendChild(rowButtonDeleteCell);
             // Thêm hàng vào bảng
             var table = document.getElementById("order-table").getElementsByTagName("tbody")[0];
             table.appendChild(row);
@@ -141,45 +199,39 @@
             document.getElementById("price").value = "";
             document.getElementById("quantity").value = "";
             //tính tổng tiền
-            cost += priceReal*quantity;
+            cost += priceReal * quantity;
             const formattedNumber = cost.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
             $("#cost").val(formattedNumber);
         }
     }
-    var selectElement = document.getElementById("select");
-    var selectedItem = selectElement.value;
-    $(document).ready(function () {
-        // Bắt sự kiện khi thay đổi giá trị trong thẻ select
-        $("#select").change(function () {
-            // Lấy giá trị được chọn
-            selectedItem = $(this).val();
-            // Xử lý giá trị được chọn
-            console.log("Giá trị được chọn là: " + selectedItem);
-        });
-    });
+   
     $(document).ready(function () {
         // Bắt sự kiện click vào nút "Lưu"
         $("#submitOrder").click(function () {
-            console.log("Type " + selectedItem);
-            // Gửi request POST đến URL "/Order/Save" với dữ liệu là productList
-            $.ajax({
-                url: "/Order/Save",
-                type: "POST",
-                data: JSON.stringify({ orderDetails: productList, selectedItem: selectedItem }),
-                contentType: "application/json; charset=utf-8",
-                success: function (response) {
-                    // Xử lý kết quả trả về từ server (nếu cần)
-                    console.log("controller trả về" + response);
-                    alert("Thêm thành công");
-                    window.location.href = "/Order/Index";
-                },
-                error: function (xhr, status, error) {
-                    // Xử lý lỗi
-                    alert("Lưu không thành công");
-                    console.log("Lỗi: " + error);
-                    console.log(xhr.responseText);
-                }
-            });
+            var confirmed = confirm("Bạn đã chắc chưa?");
+
+            if (confirmed) {
+                console.log(type.value);
+                // Gửi request POST đến URL "/Order/Save" với dữ liệu là productList
+                $.ajax({
+                    url: "/Order/Edit",
+                    type: "POST",
+                    data: JSON.stringify({ orderDetails: productList, selectedItem: type.value, OrderId: orderId }),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        // Xử lý kết quả trả về từ server (nếu cần)
+                        console.log("controller trả về" + response);
+                        alert("Sửa thành công");
+                        window.location.href = "/Order/Index";
+                    },
+                    error: function (xhr, status, error) {
+                        // Xử lý lỗi
+                        alert("Lưu không thành công");
+                        console.log("Lỗi: " + error);
+                        console.log(xhr.responseText);
+                    }
+                });
+            }
         });
     });
 
@@ -242,7 +294,7 @@
             right_side = right_side.substring(0, 2);
 
             // join number by .
-            input_val =  left_side + "." + right_side;
+            input_val = left_side + "." + right_side;
 
         } else {
             // no decimal entered
@@ -265,6 +317,25 @@
         caret_pos = updated_len - original_len + caret_pos;
         input[0].setSelectionRange(caret_pos, caret_pos);
     }
+    var deleteButtons = document.querySelectorAll("[id^='productIdDelete_']");
+    for (var i = 0; i < deleteButtons.length; i++) {
+        deleteButtons[i].addEventListener("click", function () {
 
+            var row = this.parentNode.parentNode;
+            var productDeleId = this.getAttribute("value");
+            var deletedProduct = productList.find(product => product.productId === productDeleId);
+
+            var confirmed = confirm("Bạn có chắc muốn xóa ko?");
+            if (confirmed){
+            row.remove();
+            cost = cost - deletedProduct.quantity * deletedProduct.price;
+            const formattedNumber1 = cost.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            $("#cost").val(formattedNumber1);
+            console.log("Product bị xóa " + deletedProduct.productId + deletedProduct.quantity + deletedProduct.price);
+            productList = productList.filter(product => product.productId !== productDeleId);      
+            console.log(productList); 
+            }                    
+        });
+        console.log(productList + " after delete");
+    }
 </script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>

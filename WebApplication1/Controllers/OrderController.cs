@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,6 +9,7 @@ using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
+    //[Authorize]
     public class OrderController : Controller
     {
 
@@ -20,20 +22,29 @@ namespace WebApplication1.Controllers
         }
         public ActionResult Index(int page = 1, int pageSize = 5)
         {
-            var customers = context.Orders.OrderBy(c => c.Id);
+            //if (HttpContext.Session.GetString("username")!=null)
+            //{
+                //ViewBag.Session=HttpContext.Session.GetString("username");
+                var customers = context.Orders.OrderBy(c => c.Id);
 
-            var customerProcedure = dao.GetOrdersProcedure(page, pageSize);
-            int totalCount = customers.Count();
-            int totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+                var customerProcedure = dao.GetOrdersProcedure(page, pageSize);
+                int totalCount = customers.Count();
+                int totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
 
-           // customers = (IOrderedQueryable<Order>)customers.Skip((page - 1) * pageSize).Take(pageSize);
+                // customers = (IOrderedQueryable<Order>)customers.Skip((page - 1) * pageSize).Take(pageSize);
 
-            ViewBag.TotalCount = totalCount;
-            ViewBag.TotalPages = totalPages;
-            ViewBag.CurrentPage = page;
-            ViewBag.PageSize = pageSize;
+                ViewBag.TotalCount = totalCount;
+                ViewBag.TotalPages = totalPages;
+                ViewBag.CurrentPage = page;
+                ViewBag.PageSize = pageSize;
 
-            return View(customerProcedure);
+                return View(customerProcedure);
+            //}
+            //else
+            //{              
+            //    return RedirectToAction("Index","Login");
+            //}
+           
         }
         [HttpGet]
         public IActionResult GetProducts(string keyword)
@@ -46,6 +57,37 @@ namespace WebApplication1.Controllers
             return Json(products);
         }
 
+        [HttpPost]
+        public ActionResult Edit([FromBody] OrderModel model)
+        {
+            try
+            {
+                List<OrderDetails> orderDetails = model.OrderDetails;
+                if (orderDetails.Count == 0)
+                {
+                    return BadRequest("Null value");
+                }
+                string selectedItem = model.SelectedItem;
+              bool delete=  dao.DeleteAllOrder(model.OrderId);
+                
+                    foreach (var o in orderDetails)
+                    {
+                        OrderProduct op = new OrderProduct();
+                        op.ProductId = o.productId;
+                        op.OrderId = model.OrderId;
+                        op.Quantity = o.quantity;
+                        op.Price = o.price;                      
+                        context.OrderProducts.Add(op);
+                        context.SaveChanges();
+                    }
+                    return Ok(orderDetails[0].productId.ToString() + " " + selectedItem);
+               
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpPost]
         public IActionResult Save([FromBody] OrderModel model)
         {
@@ -60,7 +102,10 @@ namespace WebApplication1.Controllers
                 Order order = new Order();
                 order.OrderType = selectedItem;
                 order.OrderDate = DateTime.Now;
-                order.CreatedBy = "tuyennh";
+               
+                    order.CreatedBy = "tuyennh";
+                
+                    
                 context.Orders.Add(order);
                 context.SaveChanges();
                 foreach (var o in orderDetails)
@@ -68,7 +113,7 @@ namespace WebApplication1.Controllers
                     OrderProduct op = new OrderProduct();
                     op.ProductId = o.productId;
                     op.OrderId = order.Id;
-                    op.Quantity = o.quantity.ToString();
+                    op.Quantity = o.quantity;
                     op.Price = o.price;
                     context.OrderProducts.Add(op);
                     context.SaveChanges();
@@ -80,28 +125,25 @@ namespace WebApplication1.Controllers
                 return BadRequest(ex.Message);
             }          
         }
-
+        // GET: OrderController/Edit/5
+        public ActionResult Edit(int id, string type)
+        {
+           
+            List<OrderDetails> list = dao.GetOrderDetails(id);
+            OrderModel order = new OrderModel();
+            order.OrderId = id;
+            order.OrderDetails = list;  
+            order.SelectedItem = type;
+            return View(order);
+        }
         // GET: OrderController/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            var order = from o in context.Orders
-                        join od in context.OrderProducts on o.Id equals od.OrderId
-                        join p in context.Products on od.ProductId equals p.Id
-                        where o.Id == id    
-                        select new OrderDetailDTO
-                        {
-                            OrderID= (int)id,
-                            OrderType=o.OrderType,
-                            OrderDate= (DateTime)o.OrderDate,
-                            OrderBy= o.CreatedBy,
-                            ProductName=p.Name,
-                            Quantiy=Int32.Parse( od.Quantity),
-                            Price= float.Parse( od.Price)
-                        };
+            var order = dao.GetOrderDetailsByID(id);
             if (order == null)
             {
                 return NotFound();
@@ -132,26 +174,10 @@ namespace WebApplication1.Controllers
             }
         }
 
-        // GET: OrderController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+      
 
         // POST: OrderController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        
 
         // GET: OrderController/Delete/5
         public ActionResult Delete(int id)

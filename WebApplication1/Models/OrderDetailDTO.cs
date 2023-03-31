@@ -10,6 +10,6 @@ namespace WebApplication1.Models
                     public string        OrderBy { get; set; }
                       public string      ProductName { get; set; }
                      public int       Quantiy { get; set; }
-                          public float  Price { get; set; } 
+                          public double  Price { get; set; } 
     }
 }
