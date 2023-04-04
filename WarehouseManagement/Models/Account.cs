@@ -9,13 +9,15 @@ namespace WarehouseManagement.Models
     {
         public Account()
         {
-            GroupAccounts = new HashSet<GroupAccount>();
+            AccountRoles = new HashSet<AccountRole>();
+            Customers = new HashSet<Customer>();
         }
 
+        public int AccountId { get; set; }
         public string Username { get; set; }
-        public string Pass { get; set; }
-        public int Accid { get; set; }
+        public string Password { get; set; }
 
-        public virtual ICollection<GroupAccount> GroupAccounts { get; set; }
+        public virtual ICollection<AccountRole> AccountRoles { get; set; }
+        public virtual ICollection<Customer> Customers { get; set; }
     }
 }

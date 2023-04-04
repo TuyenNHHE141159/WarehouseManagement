@@ -1,0 +1,858 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    string username = HttpContextAccessor.HttpContext.Session.GetString("Username");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <meta name="description" content="POS - Bootstrap Admin Template">
+    <meta name="keywords" content="admin, estimates, bootstrap, business, corporate, creative, invoice, html5, responsive, Projects">
+    <meta name="author" content="Dreamguys - Bootstrap Admin Template">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Dreams Pos admin template</title>
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/img/favicon.png">
+
+    <link rel="stylesheet" href="~/assets/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="~/assets/css/bootstrap-datetimepicker.min.css">
+
+    <link rel="stylesheet" href="~/assets/css/animate.css">
+
+    <link rel="stylesheet" href="~/assets/plugins/select2/css/select2.min.css">
+
+    <link rel="stylesheet" href="~/assets/css/dataTables.bootstrap4.min.css">
+
+    <link rel="stylesheet" href="~/assets/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="~/assets/plugins/fontawesome/css/all.min.css">
+
+    <link rel="stylesheet" href="~/assets/css/style.css">
+</head>
+
+<body>
+    <div id="global-loader">
+        <div class="whirly-loader"> </div>
+    </div>
+
+    <div class="main-wrapper">
+
+        <div class="header">
+
+            <div class="header-left active">
+                <a href="index.html" class="logo">
+                    <img src="~/assets/img/logo.png" alt="">
+                </a>
+                <a href="index.html" class="logo-small">
+                    <img src="~/assets/img/logo-small.png" alt="">
+                </a>
+                <a id="toggle_btn" href="javascript:void(0);">
+                </a>
+            </div>
+
+            <a id="mobile_btn" class="mobile_btn" href="#sidebar">
+                <span class="bar-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </a>
+
+            <ul class="nav user-menu">
+
+                <li class="nav-item">
+                    <div class="top-nav-search">
+                        <a href="javascript:void(0);" class="responsive-search">
+                            <i class="fa fa-search"></i>
+                        </a>
+                        <form action="#">
+                            <div class="searchinputs">
+                                <input type="text" placeholder="Search Here ...">
+                                <div class="search-addon">
+                                    <span><img src="~/assets/img/icons/closes.svg" alt="img"></span>
+                                </div>
+                            </div>
+                            <a class="btn" id="searchdiv"><img src="~/assets/img/icons/search.svg" alt="img"></a>
+                        </form>
+                    </div>
+                </li>
+
+
+                <li class="nav-item dropdown has-arrow flag-nav">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="javascript:void(0);" role="button">
+                        <img src="~/assets/img/flags/us1.png" alt="" height="20">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <img src="~/assets/img/flags/us.png" alt="" height="16"> English
+                        </a>
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <img src="~/assets/img/flags/fr.png" alt="" height="16"> French
+                        </a>
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <img src="~/assets/img/flags/es.png" alt="" height="16"> Spanish
+                        </a>
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <img src="~/assets/img/flags/de.png" alt="" height="16"> German
+                        </a>
+                    </div>
+                </li>
+
+
+                <li class="nav-item dropdown">
+                    <a href="javascript:void(0);" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+                        <img src="~/assets/img/icons/notification-bing.svg" alt="img"> <span class="badge rounded-pill">4</span>
+                    </a>
+                    <div class="dropdown-menu notifications">
+                        <div class="topnav-dropdown-header">
+                            <span class="notification-title">Notifications</span>
+                            <a href="javascript:void(0)" class="clear-noti"> Clear All </a>
+                        </div>
+                        <div class="noti-content">
+                            <ul class="notification-list">
+                                <li class="notification-message">
+                                    <a href="~/activities.html">
+                                        <div class="media d-flex">
+                                            <span class="avatar flex-shrink-0">
+                                                <img alt="" src="~/assets/img/profiles/avatar-02.jpg">
+                                            </span>
+                                            <div class="media-body flex-grow-1">
+                                                <p class="noti-details"><span class="noti-title">John Doe</span> added new task <span class="noti-title">Patient appointment booking</span></p>
+                                                <p class="noti-time"><span class="notification-time">4 mins ago</span></p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="notification-message">
+                                    <a href="~/activities.html">
+                                        <div class="media d-flex">
+                                            <span class="avatar flex-shrink-0">
+                                                <img alt="" src="~/assets/img/profiles/avatar-03.jpg">
+                                            </span>
+                                            <div class="media-body flex-grow-1">
+                                                <p class="noti-details"><span class="noti-title">Tarah Shropshire</span> changed the task name <span class="noti-title">Appointment booking with payment gateway</span></p>
+                                                <p class="noti-time"><span class="notification-time">6 mins ago</span></p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="notification-message">
+                                    <a href="~/activities.html">
+                                        <div class="media d-flex">
+                                            <span class="avatar flex-shrink-0">
+                                                <img alt="" src="~/assets/img/profiles/avatar-06.jpg">
+                                            </span>
+                                            <div class="media-body flex-grow-1">
+                                                <p class="noti-details"><span class="noti-title">Misty Tison</span> added <span class="noti-title">Domenic Houston</span> and <span class="noti-title">Claire Mapes</span> to project <span class="noti-title">Doctor available module</span></p>
+                                                <p class="noti-time"><span class="notification-time">8 mins ago</span></p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="notification-message">
+                                    <a href="~/activities.html">
+                                        <div class="media d-flex">
+                                            <span class="avatar flex-shrink-0">
+                                                <img alt="" src="~/assets/img/profiles/avatar-17.jpg">
+                                            </span>
+                                            <div class="media-body flex-grow-1">
+                                                <p class="noti-details"><span class="noti-title">Rolland Webber</span> completed task <span class="noti-title">Patient and Doctor video conferencing</span></p>
+                                                <p class="noti-time"><span class="notification-time">12 mins ago</span></p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="notification-message">
+                                    <a href="~/activities.html">
+                                        <div class="media d-flex">
+                                            <span class="avatar flex-shrink-0">
+                                                <img alt="" src="~/assets/img/profiles/avatar-13.jpg">
+                                            </span>
+                                            <div class="media-body flex-grow-1">
+                                                <p class="noti-details"><span class="noti-title">Bernardo Galaviz</span> added new task <span class="noti-title">Private chat module</span></p>
+                                                <p class="noti-time"><span class="notification-time">2 days ago</span></p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="topnav-dropdown-footer">
+                            <a href="~/activities.html">View all Notifications</a>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item dropdown has-arrow main-drop">
+                    <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
+                        <span class="user-img">
+                            <img src="~/assets/img/profiles/avator1.jpg" alt="">
+                            <span class="status online"></span>
+                        </span>
+                    </a>
+                    <div class="dropdown-menu menu-drop-user">
+                        <div class="profilename">
+                            <div class="profileset">
+                                <span class="user-img">
+                                    <img src="~/assets/img/profiles/avator1.jpg" alt="">
+                                    <span class="status online"></span>
+                                </span>
+                                <div class="profilesets">
+                                    <h6>@username</h6>
+                                </div>
+                            </div>
+                            <hr class="m-0">
+                            <a class="dropdown-item" href="profile.html"> <i class="me-2" data-feather="user"></i> My Profile</a>
+                            <a class="dropdown-item" href="generalsettings.html"><i class="me-2" data-feather="settings"></i>Settings</a>
+                            <hr class="m-0">
+                            <a class="dropdown-item logout pb-0" asp-action="Logout" asp-controller="Login"><img src="~/assets/img/icons/log-out.svg" class="me-2" alt="img">Logout</a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+
+            <div class="dropdown mobile-user-menu">
+                <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="profile.html">My Profile</a>
+                    <a class="dropdown-item" href="generalsettings.html">Settings</a>
+                    <a class="dropdown-item" href="signin.html">Logout</a>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-inner slimscroll">
+                <div id="sidebar-menu" class="sidebar-menu">
+                    <ul>
+                        <li>
+                            <a href="index.html"><img src="~/assets/img/icons/dashboard.svg" alt="img"><span> Dashboard</span> </a>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="~/assets/img/icons/product.svg" alt="img"><span> Sản phẩm</span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a asp-action="Index" asp-controller="Product">Danh sách</a></li>
+                                <li><a href="~/addproduct.html">Add Product</a></li>
+                                <li><a href="categorylist.html">Category List</a></li>
+                                <li><a href="~/addcategory.html">Add Category</a></li>
+                                <li><a href="subcategorylist.html">Sub Category List</a></li>
+                                <li><a href="subaddcategory.html">Add Sub Category</a></li>
+                                <li><a href="brandlist.html">Brand List</a></li>
+                                <li><a href="~/addbrand.html">Add Brand</a></li>
+                                <li><a href="importproduct.html">Import Products</a></li>
+                                <li><a href="barcode.html">Print Barcode</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="/assets/img/icons/sales1.svg" alt="img"><span> Đơn hàng</span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a asp-action="Index" asp-controller="Sales">Danh sách đơn hàng</a></li>
+                                <li><a asp-action="Create" asp-controller="Sales">Thêm mới đơn hàng</a></li>
+
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="/assets/img/icons/purchase1.svg" alt="img"><span> Purchase</span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a asp-action="Index" asp-controller="Purchase">Purchase List</a></li>
+                                <li><a asp-action="Create" asp-controller="Purchase">Add Purchase</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="~/assets/img/icons/expense1.svg" alt="img"><span> Expense</span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="expenselist.html">Expense List</a></li>
+                                <li><a href="createexpense.html">Add Expense</a></li>
+                                <li><a href="expensecategory.html">Expense Category</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="~/assets/img/icons/quotation1.svg" alt="img"><span> Quotation</span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="quotationList.html">Quotation List</a></li>
+                                <li><a href="~/addquotation.html">Add Quotation</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="~/assets/img/icons/transfer1.svg" alt="img"><span> Transfer</span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="transferlist.html">Transfer List</a></li>
+                                <li><a href="~/addtransfer.html">Add Transfer </a></li>
+                                <li><a href="importtransfer.html">Import Transfer </a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="~/assets/img/icons/return1.svg" alt="img"><span> Return</span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="salesreturnlist.html">Sales Return List</a></li>
+                                <li><a href="createsalesreturn.html">Add Sales Return </a></li>
+                                <li><a href="purchasereturnlist.html">Purchase Return List</a></li>
+                                <li><a href="createpurchasereturn.html">Add Purchase Return </a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="~/assets/img/icons/users1.svg" alt="img"><span> People</span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a asp-action="Index" asp-controller="Customer">Danh sách khách hàng</a></li>
+                                <li><a href="~/addcustomer.html">Add Customer </a></li>
+                                <li><a href="supplierlist.html">Supplier List</a></li>
+                                <li><a href="~/addsupplier.html">Add Supplier </a></li>
+                                <li><a href="userlist.html">User List</a></li>
+                                <li><a href="~/adduser.html">Add User</a></li>
+                                <li><a href="storelist.html">Store List</a></li>
+                                <li><a href="~/addstore.html">Add Store</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="~/assets/img/icons/places.svg" alt="img"><span> Places</span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="newcountry.html">New Country</a></li>
+                                <li><a href="countrieslist.html">Countries list</a></li>
+                                <li><a href="newstate.html">New State </a></li>
+                                <li><a href="statelist.html">State list</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="components.html"><i data-feather="layers"></i><span> Components</span> </a>
+                        </li>
+                        <li>
+                            <a href="blankpage.html"><i data-feather="file"></i><span> Blank Page</span> </a>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><i data-feather="alert-octagon"></i> <span> Error Pages </span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="error-404.html">404 Error </a></li>
+                                <li><a href="error-500.html">500 Error </a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><i data-feather="box"></i> <span>Elements </span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="sweetalerts.html">Sweet Alerts</a></li>
+                                <li><a href="tooltip.html">Tooltip</a></li>
+                                <li><a href="popover.html">Popover</a></li>
+                                <li><a href="ribbon.html">Ribbon</a></li>
+                                <li><a href="clipboard.html">Clipboard</a></li>
+                                <li><a href="drag-drop.html">Drag & Drop</a></li>
+                                <li><a href="rangeslider.html">Range Slider</a></li>
+                                <li><a href="rating.html">Rating</a></li>
+                                <li><a href="toastr.html">Toastr</a></li>
+                                <li><a href="text-editor.html">Text Editor</a></li>
+                                <li><a href="counter.html">Counter</a></li>
+                                <li><a href="scrollbar.html">Scrollbar</a></li>
+                                <li><a href="spinner.html">Spinner</a></li>
+                                <li><a href="notification.html">Notification</a></li>
+                                <li><a href="lightbox.html">Lightbox</a></li>
+                                <li><a href="stickynote.html">Sticky Note</a></li>
+                                <li><a href="timeline.html">Timeline</a></li>
+                                <li><a href="form-wizard.html">Form Wizard</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><i data-feather="bar-chart-2"></i> <span> Charts </span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="chart-apex.html">Apex Charts</a></li>
+                                <li><a href="chart-js.html">Chart Js</a></li>
+                                <li><a href="chart-morris.html">Morris Charts</a></li>
+                                <li><a href="chart-flot.html">Flot Charts</a></li>
+                                <li><a href="chart-peity.html">Peity Charts</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><i data-feather="award"></i><span> Icons </span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="icon-fontawesome.html">Fontawesome Icons</a></li>
+                                <li><a href="icon-feather.html">Feather Icons</a></li>
+                                <li><a href="icon-ionic.html">Ionic Icons</a></li>
+                                <li><a href="icon-material.html">Material Icons</a></li>
+                                <li><a href="icon-pe7.html">Pe7 Icons</a></li>
+                                <li><a href="icon-simpleline.html">Simpleline Icons</a></li>
+                                <li><a href="icon-themify.html">Themify Icons</a></li>
+                                <li><a href="icon-weather.html">Weather Icons</a></li>
+                                <li><a href="icon-typicon.html">Typicon Icons</a></li>
+                                <li><a href="icon-flag.html">Flag Icons</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><i data-feather="columns"></i> <span> Forms </span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="form-basic-inputs.html">Basic Inputs </a></li>
+                                <li><a href="form-input-groups.html">Input Groups </a></li>
+                                <li><a href="form-horizontal.html">Horizontal Form </a></li>
+                                <li><a href="form-vertical.html"> Vertical Form </a></li>
+                                <li><a href="form-mask.html">Form Mask </a></li>
+                                <li><a href="form-validation.html">Form Validation </a></li>
+                                <li><a href="form-select2.html">Form Select2 </a></li>
+                                <li><a href="form-fileupload.html">File Upload </a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><i data-feather="layout"></i> <span> Table </span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="tables-basic.html">Basic Tables </a></li>
+                                <li><a href="data-tables.html">Data Table </a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="~/assets/img/icons/product.svg" alt="img"><span> Application</span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="chat.html">Chat</a></li>
+                                <li><a href="calendar.html">Calendar</a></li>
+                                <li><a href="email.html">Email</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="~/assets/img/icons/time.svg" alt="img"><span> Report</span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="purchaseorderreport.html">Purchase order report</a></li>
+                                <li><a href="inventoryreport.html">Inventory Report</a></li>
+                                <li><a href="salesreport.html">Sales Report</a></li>
+                                <li><a href="invoicereport.html">Invoice Report</a></li>
+                                <li><a href="purchasereport.html">Purchase Report</a></li>
+                                <li><a href="supplierreport.html">Supplier Report</a></li>
+                                <li><a href="customerreport.html">Customer Report</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="~/assets/img/icons/users1.svg" alt="img"><span> Users</span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="newuser.html">New User </a></li>
+                                <li><a href="userlist.html">Users List</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="~/assets/img/icons/settings.svg" alt="img"><span> Settings</span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="generalsettings.html">General Settings</a></li>
+                                <li><a href="emailsettings.html">Email Settings</a></li>
+                                <li><a href="paymentsettings.html">Payment Settings</a></li>
+                                <li><a href="currencysettings.html">Currency Settings</a></li>
+                                <li><a href="grouppermissions.html">Group Permissions</a></li>
+                                <li><a href="taxrates.html">Tax Rates</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-wrapper">
+            <div class="content">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h4>Thêm đơn bán hàng</h4>
+                        <h6>Thêm chi tiết đơn hàng bán</h6>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Loại đơn </label>
+                                    <div class="input-groupicon">
+                                        <select id="select" style="width:fit-content" class="form-select">
+                                            <option value="import">Nhập kho</option>
+                                            <option value="export">Xuất kho</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Ngày đặt hàng </label>
+                                    <div class="input-groupicon">
+                                        <input type="text" placeholder="DD-MM-YYYY" class="datetimepicker">
+                                        <div class="addonset">
+                                            <img src="~/assets/img/icons/calendars.svg" alt="img">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Tên khách hàng</label>
+                                    <div class="input-groupicon">
+                                        <input type="text" id="customer" placeholder="Nhập tên khách hàng ...">
+                                        <input type="hidden" id="customerIdHidden" name="customerIdHidden">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Tên sản phẩm</label>
+                                    <div class="input-groupicon">
+                                        <input type="text" id="product" placeholder="Nhập tên sản phẩm và chọn...">
+                                        <input type="hidden" id="productIdHidden" name="productIdHidden">
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div class="col-lg-12 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Giá sản phẩm</label>
+                                    <div class="input-groupicon">
+                                        <input type="text" class="form-control" id="price" min="1" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" value="" data-type="currency" placeholder="10.000 VNĐ" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Số lương</label>
+                                    <div class="input-groupicon">
+                                        <input placeholder="đơn vị sản phẩm" class="form-control" type="number" id="quantity" min="1" step="1" pattern="[0-9]+" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-success" onclick="addOrder()">Thêm</button>
+                        </div>
+                        <div class="row">
+                            <div class="table-responsive mb-3">
+                                <table class="table" id="order-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Tên sản phẩm</th>
+                                            <th>Giá sản phẩm</th>
+                                            <th>Số lượng</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="row">
+                                <div class="col-lg-6 ">
+                                    <div class="total-order w-100 max-widthauto m-auto mb-4">
+                                        <ul>
+                                            <li>
+                                                <h4>Tổng tiền</h4>
+                                                <h5><input readonly id="cost" name="cost" class="form-control"></h5>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <a class="btn btn-submit me-2" id="submitOrder">Lưu</a>
+                                <a asp-controller="Sales" asp-action="Index" class="btn btn-cancel">Hủy</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="~/assets/js/jquery-3.6.0.min.js"></script>
+
+    <script src="~/assets/js/feather.min.js"></script>
+
+    <script src="~/assets/js/jquery.slimscroll.min.js"></script>
+
+    <script src="~/assets/js/jquery.dataTables.min.js"></script>
+    <script src="~/assets/js/dataTables.bootstrap4.min.js"></script>
+
+    <script src="~/assets/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/assets/plugins/select2/js/select2.min.js"></script>
+
+    <script src="~/assets/js/moment.min.js"></script>
+    <script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
+
+    <script src="~/assets/plugins/sweetalert/sweetalert2.all.min.js"></script>
+    <script src="~/assets/plugins/sweetalert/sweetalerts.min.js"></script>
+
+    <script src="~/assets/js/script.js"></script>
+
+    <!-- Thư viện jQuery -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script>
+
+        //autocomplete customer
+        const customerIdInput = document.getElementById('customer');
+        const customerIdInputHidden = document.getElementById('customerIdHidden');
+        customerIdInput.addEventListener("input", function (event) {
+            const keyword = event.target.value;
+            $.ajax({
+                url: "/Sales/GetCustomers",
+                type: "GET",
+                data: { keyword: keyword },
+                success: function (response) {
+                    // Xử lý kết quả trả về
+                    console.log(response);
+                    $("#customer").autocomplete({
+                        source: response,
+                        select: function (event, ui) {
+                            // Cập nhật giá trị của ô input "productId" với giá trị "label" của phần tử được chọn
+                            $("#customer").val(ui.item.label.trim());
+                            customerIdInputHidden.value = ui.item.value;
+                            $("#customerIdHidden").val(ui.item.value);
+                            console.log(customerIdInputHidden.value);
+                            return false;
+                        }
+                    });
+                },
+                error: function () {
+                    // Xử lý lỗi
+                    console.log("Error");
+                },
+            });
+        });
+        ////
+        let productList = [];
+        const productIdInput = document.getElementById('product');
+        const productIdInputHidden = document.getElementById('productIdHidden');
+        var cost = 0;
+        function isProductExist(productId) {
+            return productList.some(product => product.productId === productId);
+        }
+        productIdInput.addEventListener("input", function (event) {
+            const keyword = event.target.value;
+
+            $.ajax({
+                url: "/Sales/GetProducts",
+                type: "GET",
+                data: { keyword: keyword },
+                success: function (response) {
+                    // Xử lý kết quả trả về
+                    console.log(response);
+                    $("#product").autocomplete({
+                        source: response,
+                        select: function (event, ui) {
+                            // Cập nhật giá trị của ô input "productId" với giá trị "label" của phần tử được chọn
+                            $("#product").val(ui.item.label.trim());
+                            productIdInputHidden.value = ui.item.value;
+                            $("#productIdHidden").val(ui.item.value);
+                            console.log(productIdInputHidden.value);
+                            return false;
+                        }
+                    });
+                },
+                error: function () {
+                    // Xử lý lỗi
+                    console.log("Error");
+                },
+            });
+        });
+        function addOrder() {
+            // Lấy thông tin sản phẩm, giá và số lượng từ form
+            var product = document.getElementById("product").value;
+            var price = document.getElementById("price").value;
+            priceReal = parseInt(price.replace(/,/g, ''));
+            var quantity = document.getElementById("quantity").value;
+
+            // Kiểm tra nếu có bất kỳ trường nào trống thì hiển thị thông báo và dừng hàm
+            if (!product || !price || !quantity) {
+                alert("Vui lòng nhập đầy đủ thông tin đơn hàng");
+
+            }
+            else if (productIdHidden.value === "") {
+                document.getElementById("product").value = "";
+                document.getElementById("price").value = "";
+                document.getElementById("quantity").value = "";
+                alert("Sản phẩm ko tồn tại");
+            }
+            else if (isProductExist(productIdHidden.value)) {
+                document.getElementById("product").value = "";
+                document.getElementById("price").value = "";
+                document.getElementById("quantity").value = "";
+                console.log("Sản phẩm đã tồn tại trong danh sách.");
+                alert("Sản phẩm đã tồn tại trong danh sách.");
+            }
+            else {
+                const producto = {
+                    productId: productIdHidden.value,
+                    quantity: quantity,
+                    price: priceReal
+                };
+                console.log("Product đc thêm có id " + productIdHidden.value);
+                productList.push(producto);
+                // Tạo một hàng mới cho bảng
+                var row = document.createElement("tr");
+
+                // Thêm các ô cho hàng
+                var productCell = document.createElement("td");
+                productCell.textContent = product;
+                row.appendChild(productCell);
+
+                var priceCell = document.createElement("td");
+                priceCell.textContent = price;
+                row.appendChild(priceCell);
+
+                var quantityCell = document.createElement("td");
+                quantityCell.textContent = quantity;
+                row.appendChild(quantityCell);
+                var buttonDelete = document.createElement("button");
+                buttonDelete.value = productIdHidden.value;
+                buttonDelete.textContent = "Xóa";
+                buttonDelete.id = "productIdDelete_" + productIdHidden.value;
+                buttonDelete.className = "btn btn-danger";
+                buttonDelete.addEventListener('click', function () {
+                    var row = this.parentNode.parentNode;
+                    var productDeleId = this.getAttribute("value");
+                    var deletedProduct = productList.find(product => product.productId === productDeleId);
+
+                    var confirmed = confirm("Bạn có chắc muốn xóa ko?");
+                    if (confirmed) {
+                        row.remove();
+                        cost = cost - deletedProduct.quantity * deletedProduct.price;
+                        const formattedNumber1 = cost.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                        $("#cost").val(formattedNumber1);
+                        console.log("Product bị xóa " + deletedProduct.productId + deletedProduct.quantity + deletedProduct.price);
+                        productList = productList.filter(product => product.productId !== productDeleId);
+                        console.log(productList);
+                    }
+                    console.log(buttonDelete.value);
+                });
+
+                var rowButtonDeleteCell = document.createElement("td");
+                rowButtonDeleteCell.appendChild(buttonDelete);
+                row.appendChild(rowButtonDeleteCell);
+
+                // Thêm hàng vào bảng
+                var table = document.getElementById("order-table").getElementsByTagName("tbody")[0];
+                table.appendChild(row);
+
+                // Xóa các giá trị khỏi form
+                document.getElementById("product").value = "";
+                document.getElementById("price").value = "";
+                document.getElementById("quantity").value = "";
+                //tính tổng tiền
+                cost += priceReal * quantity;
+                const formattedNumber = cost.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                $("#cost").val(formattedNumber);
+            }
+        }
+        var selectElement = document.getElementById("select");
+        var selectedItem = selectElement.value;
+        $(document).ready(function () {
+            // Bắt sự kiện khi thay đổi giá trị trong thẻ select
+            $("#select").change(function () {
+                // Lấy giá trị được chọn
+                selectedItem = $(this).val();
+                // Xử lý giá trị được chọn
+                console.log("Giá trị được chọn là: " + selectedItem);
+            });
+        });
+        $(document).ready(function () {
+            // Bắt sự kiện click vào nút "Lưu"
+            $("#submitOrder").click(function () {
+                console.log("Type " + selectedItem);
+                // Gửi request POST đến URL "/Order/Save" với dữ liệu là productList
+                $.ajax({
+                    url: "/Sales/Save",
+                    type: "POST",
+                    data: JSON.stringify({ orderDetails: productList, selectedItem: selectedItem, customerId: customerIdInputHidden.value }),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        // Xử lý kết quả trả về từ server (nếu cần)
+                        console.log("controller trả về" + response);
+                        alert("Thêm thành công");
+                        window.location.href = "/Sales/Index";
+                    },
+                    error: function (xhr, status, error) {
+                        // Xử lý lỗi
+                        alert("Lưu không thành công");
+                        console.log("Lỗi: " + error);
+                        console.log(xhr.responseText);
+                    }
+                });
+            });
+        });
+
+        $("input[data-type='currency']").on({
+            keyup: function () {
+                formatCurrency($(this));
+            },
+            blur: function () {
+                formatCurrency($(this), "blur");
+            }
+        });
+
+
+        function formatNumber(n) {
+            // format number 1000000 to 1,234,567
+            return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        }
+
+
+        function formatCurrency(input, blur) {
+            // appends $ to value, validates decimal side
+            // and puts cursor back in right position.
+
+            // get input value
+            var input_val = input.val();
+
+            // don't validate empty input
+            if (input_val === "") { return; }
+
+            // original length
+            var original_len = input_val.length;
+
+            // initial caret position
+            var caret_pos = input.prop("selectionStart");
+
+            // check for decimal
+            if (input_val.indexOf(".") >= 0) {
+
+                // get position of first decimal
+                // this prevents multiple decimals from
+                // being entered
+                var decimal_pos = input_val.indexOf(".");
+
+                // split number by decimal point
+                var left_side = input_val.substring(0, decimal_pos);
+                var right_side = input_val.substring(decimal_pos);
+
+                // add commas to left side of number
+                left_side = formatNumber(left_side);
+
+                // validate right side
+                right_side = formatNumber(right_side);
+
+                // On blur make sure 2 numbers after decimal
+                if (blur === "blur") {
+                    right_side += "00";
+                }
+
+                // Limit decimal to only 2 digits
+                right_side = right_side.substring(0, 2);
+
+                // join number by .
+                input_val = left_side + "." + right_side;
+
+            } else {
+                // no decimal entered
+                // add commas to number
+                // remove all non-digits
+                input_val = formatNumber(input_val);
+                input_val = input_val;
+
+                // final formatting
+                if (blur === "blur") {
+                    input_val += "";
+                }
+            }
+
+            // send updated string to input
+            input.val(input_val);
+
+            // put caret back in the right position
+            var updated_len = input_val.length;
+            caret_pos = updated_len - original_len + caret_pos;
+            input[0].setSelectionRange(caret_pos, caret_pos);
+        }
+    </script>
+</body>
+</html>

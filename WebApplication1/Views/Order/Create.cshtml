@@ -8,6 +8,11 @@
        width: auto; 
        max-width: 300px;
        }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+
    </style>
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <!-- Thư viện jQuery -->
@@ -63,6 +68,7 @@
     Tổng tiền: <input readonly id="cost" name="cost" class="form-control">
     <br />
     <button id="submitOrder" class="btn btn-success">Lưu</button>
+    @Html.Partial("~/Views/Footer/Footer.cshtml")
     </div>
 
 

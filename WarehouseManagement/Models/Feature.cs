@@ -9,12 +9,12 @@ namespace WarehouseManagement.Models
     {
         public Feature()
         {
-            FeatureGroups = new HashSet<FeatureGroup>();
+            RoleFeatures = new HashSet<RoleFeature>();
         }
 
         public int Fid { get; set; }
-        public string Url { get; set; }
+        public string Feature1 { get; set; }
 
-        public virtual ICollection<FeatureGroup> FeatureGroups { get; set; }
+        public virtual ICollection<RoleFeature> RoleFeatures { get; set; }
     }
 }

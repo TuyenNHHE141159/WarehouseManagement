@@ -14,6 +14,10 @@
         width: auto;
         max-width: 300px;
     }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
 </style>
 <div class="container">
     @Html.Partial("~/Views/Header/Header.cshtml")
@@ -42,7 +46,7 @@
             <input type="hidden" id="productIdHidden" name="productIdHidden">
         </table>
         <br />
-        <button type="button" onclick="addOrder()">Thêm</button>
+        <button type="button" class="btn btn-success" onclick="addOrder()">Thêm</button>
     </form>
     <table id="oldLisst" class="table" style="display:none">
         <thead class="table-light">
@@ -79,9 +83,9 @@
             {
                 <tr>      
                     <td>@o.productName</td>
-                    <td>@o.quantity</td>
                     <td>@o.price</td>
-                    <td><button value="@o.productId" id="productIdDelete_@o.productId">Xóa</button></td>
+                    <td>@o.quantity</td>
+                    <td><button value="@o.productId" id="productIdDelete_@o.productId" class="btn btn-danger">Xóa</button></td>
                 </tr>
             }
         </tbody>
@@ -90,6 +94,7 @@
     Tổng tiền: <input readonly id="cost" name="cost" value="">
     <br />
     <button id="submitOrder" class="btn btn-primary">Lưu</button>
+    @Html.Partial("~/Views/Footer/Footer.cshtml")
 </div>
 <script>
     let productList = [];
@@ -193,6 +198,25 @@
             buttonDelete.value = productIdHidden.value;
             buttonDelete.textContent = "Xóa";
             buttonDelete.id = "productIdDelete_" + productIdHidden.value;
+            buttonDelete.className = "btn btn-danger";
+            buttonDelete.addEventListener('click', function () {
+                var row = this.parentNode.parentNode;
+            var productDeleId = this.getAttribute("value");
+            var deletedProduct = productList.find(product => product.productId === productDeleId);
+
+            var confirmed = confirm("Bạn có chắc muốn xóa ko?");
+            if (confirmed){
+            row.remove();
+            cost = cost - deletedProduct.quantity * deletedProduct.price;
+            const formattedNumber1 = cost.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            $("#cost").val(formattedNumber1);
+            console.log("Product bị xóa " + deletedProduct.productId + deletedProduct.quantity + deletedProduct.price);
+            productList = productList.filter(product => product.productId !== productDeleId);      
+            console.log(productList); }
+                console.log(buttonDelete.value);
+            });
+            
+
             var rowButtonDeleteCell=document.createElement("td");
             rowButtonDeleteCell.appendChild(buttonDelete);
             row.appendChild(rowButtonDeleteCell);
@@ -227,6 +251,8 @@
                     success: function (response) {
                         // Xử lý kết quả trả về từ server (nếu cần)
                         console.log("controller trả về" + response);
+                        console.log("list gửi về server" + productList);
+
                         alert("Sửa thành công");
                         window.location.href = "/Order/Index";
                     },

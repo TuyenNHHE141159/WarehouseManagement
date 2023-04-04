@@ -9,15 +9,15 @@ namespace WarehouseManagement.Models
     {
         public Customer()
         {
-            Bills = new HashSet<Bill>();
+            Orders = new HashSet<Order>();
         }
 
         public int Id { get; set; }
+        public int? AccountId { get; set; }
         public string Name { get; set; }
         public string Phone { get; set; }
-        public string Address { get; set; }
-        public int? Isfarmer { get; set; }
 
-        public virtual ICollection<Bill> Bills { get; set; }
+        public virtual Account Account { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
     }
 }
