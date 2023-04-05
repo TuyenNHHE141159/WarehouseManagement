@@ -19,6 +19,11 @@ namespace WarehouseManagement.Controllers
         }
         public IActionResult Add()
         {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Add(string name, string phone)
+        {
 
             return View();
         }

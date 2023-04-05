@@ -50,12 +50,21 @@ namespace WarehouseManagement.Controllers
                 return RedirectToAction("Index", "Error");
             }
             var order = dao.GetOrderDetailsByID(id);
+            var customerName = from c in context.Customers
+                               join o in context.Orders on c.Id equals o.CustomerId
+                               where o.Id == id
+                               select new
+                               {
+                                   c.Name
+                               };
+            string name = customerName.FirstOrDefault()?.Name;
             if (order.Count() > 0)
             {
                 ViewBag.OrderId = id;
                 ViewBag.OrderType = order[0].OrderType;
                 ViewBag.OrderDate = order[0].OrderDate;
                 ViewBag.OrderBy = order[0].OrderBy;
+                ViewBag.customerName= name;
             }   
             if (order == null)
             {
@@ -180,6 +189,15 @@ namespace WarehouseManagement.Controllers
             {
                 return RedirectToAction("Index","Error");
             }
+            var customerName = from c in context.Customers
+                               join o in context.Orders on c.Id equals o.CustomerId
+                               where o.Id == id
+                               select new
+                               {
+                                   c.Name
+                               };
+            string name = customerName.FirstOrDefault()?.Name;
+            ViewBag.customerName = name;
             List<OrderDetails> list = dao.GetOrderDetails(id);
             OrderModel order = new OrderModel();
             order.OrderId = id;

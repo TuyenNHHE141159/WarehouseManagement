@@ -493,7 +493,7 @@
                                     </div>
                                 </div>
                             </div>
-                        
+
                             <div class="col-lg-12 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Giá sản phẩm</label>
@@ -551,8 +551,93 @@
             </div>
         </div>
     </div>
+    <div id="confirm-popup">
+        <div class="popup">
+            <p>Bạn chắc chưa?</p>
+            <button id="confirm-btn">Đồng ý</button>
+            <button id="cancel-btn">Hủy</button>
+        </div>
+    </div>
+    <div id="confirm-popup-delete">
+        <div class="popup">
+            <p>Bạn chắc chưa?</p>
+            <button id="confirm-btn-delete">Đồng ý</button>
+            <button id="cancel-btn-delete">Hủy</button>
+        </div>
+    </div>
+    <div id="success-popup" class="popup-message success-message">
+        <p>Thành công</p>
+    </div>
 
+    <div id="failure-popup" class="popup-message failure-message">
+        <p>Thất bại</p>
+    </div>
 
+    <style>
+        .popup-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            z-index: 9999;
+        }
+
+        .success-message {
+            color: #008000; /* green */
+        }
+
+        .failure-message {
+            color: #ff0000; /* red */
+        }
+
+        #confirm-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        #confirm-popup-delete{
+              display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        .popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+    </style>
     <script src="~/assets/js/jquery-3.6.0.min.js"></script>
 
     <script src="~/assets/js/feather.min.js"></script>
@@ -654,21 +739,37 @@
 
             // Kiểm tra nếu có bất kỳ trường nào trống thì hiển thị thông báo và dừng hàm
             if (!product || !price || !quantity) {
-                alert("Vui lòng nhập đầy đủ thông tin đơn hàng");
+                $("#failure-popup p").text("Thêm sản phẩm ko thành công!");
+                $("#failure-popup").show();
+                console.log("Thêm thất bại!");
+                setTimeout(function () {
+                    $("#failure-popup").hide();
+                }, 2000);
 
             }
             else if (productIdHidden.value === "") {
                 document.getElementById("product").value = "";
                 document.getElementById("price").value = "";
                 document.getElementById("quantity").value = "";
-                alert("Sản phẩm ko tồn tại");
+                  $("#failure-popup p").text("Thêm sản phẩm ko thành công!");
+                $("#failure-popup").show();
+                console.log("Thêm thất bại!");
+                setTimeout(function () {
+                    $("#failure-popup").hide();
+                }, 2000);
             }
             else if (isProductExist(productIdHidden.value)) {
                 document.getElementById("product").value = "";
                 document.getElementById("price").value = "";
                 document.getElementById("quantity").value = "";
                 console.log("Sản phẩm đã tồn tại trong danh sách.");
-                alert("Sản phẩm đã tồn tại trong danh sách.");
+                $("#failure-popup p").text("Sản phẩm đã tồn tại trong danh sách.");
+                $("#failure-popup").show();
+                console.log("Thêm thất bại!");
+                setTimeout(function () {
+                    $("#failure-popup").hide();
+                }, 2000);
+               // alert("Sản phẩm đã tồn tại trong danh sách.");
             }
             else {
                 const producto = {
@@ -693,6 +794,7 @@
                 var quantityCell = document.createElement("td");
                 quantityCell.textContent = quantity;
                 row.appendChild(quantityCell);
+
                 var buttonDelete = document.createElement("button");
                 buttonDelete.value = productIdHidden.value;
                 buttonDelete.textContent = "Xóa";
@@ -701,18 +803,52 @@
                 buttonDelete.addEventListener('click', function () {
                     var row = this.parentNode.parentNode;
                     var productDeleId = this.getAttribute("value");
-                    var deletedProduct = productList.find(product => product.productId === productDeleId);
-
-                    var confirmed = confirm("Bạn có chắc muốn xóa ko?");
-                    if (confirmed) {
-                        row.remove();
+                    var deletedProduct = productList.find(product => product.productId === productDeleId);                 
+                    var comfirmDelete = document.getElementById('confirm-popup-delete');
+                    var comfirm = document.getElementById('confirm-btn-delete');
+                    var cancel = document.getElementById('cancel-btn-delete');
+                    comfirmDelete.style.display = 'block';
+                    comfirm.addEventListener('click', function () {
+                        // Remove the row
+                        if(row!==null){
+                            row.remove();
+                        }
+                        // Update the cost
                         cost = cost - deletedProduct.quantity * deletedProduct.price;
                         const formattedNumber1 = cost.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
                         $("#cost").val(formattedNumber1);
+
                         console.log("Product bị xóa " + deletedProduct.productId + deletedProduct.quantity + deletedProduct.price);
+
                         productList = productList.filter(product => product.productId !== productDeleId);
                         console.log(productList);
-                    }
+                        //deletedProduct = null;
+                        deletedProduct = null;
+                        productDeleId = null;
+                        row = null;
+                        // Hide the confirmation popup
+                        comfirmDelete.style.display = 'none';
+                    });
+
+                    // Add an event listener for the cancel button inside the popup
+                    cancel.addEventListener('click', function () {
+                        // Hide the confirmation popup
+                        comfirmDelete.style.display = 'none';
+                        deletedProduct = null;
+                        productDeleId=null;
+                        row=null;
+                    });
+
+                    //var confirmed = confirm("Bạn có chắc muốn xóa ko?");
+                    //if (confirmed) {
+                    //    row.remove();
+                    //    cost = cost - deletedProduct.quantity * deletedProduct.price;
+                    //    const formattedNumber1 = cost.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                    //    $("#cost").val(formattedNumber1);
+                    //    console.log("Product bị xóa " + deletedProduct.productId + deletedProduct.quantity + deletedProduct.price);
+                    //    productList = productList.filter(product => product.productId !== productDeleId);
+                    //    console.log(productList);
+                    //}
                     console.log(buttonDelete.value);
                 });
 
@@ -745,11 +881,56 @@
                 console.log("Giá trị được chọn là: " + selectedItem);
             });
         });
+
+
+        //$(document).ready(function () {
+        //    // Bắt sự kiện click vào nút "Lưu"
+        //    $("#submitOrder").click(function () {
+        //        console.log("Type " + selectedItem);
+        //        // Gửi request POST đến URL "/Order/Save" với dữ liệu là productList
+        //        $.ajax({
+        //            url: "/Sales/Save",
+        //            type: "POST",
+        //            data: JSON.stringify({ orderDetails: productList, selectedItem: selectedItem, customerId: customerIdInputHidden.value }),
+        //            contentType: "application/json; charset=utf-8",
+        //            success: function (response) {
+        //                // Xử lý kết quả trả về từ server (nếu cần)
+        //                console.log("controller trả về" + response);
+        //                alert("Thêm thành công");
+        //                window.location.href = "/Sales/Index";
+        //            },
+        //            error: function (xhr, status, error) {
+        //                // Xử lý lỗi
+        //                alert("Lưu không thành công");
+        //                console.log("Lỗi: " + error);
+        //                console.log(xhr.responseText);
+        //            }
+        //        });
+        //    });
+        //});
+
         $(document).ready(function () {
             // Bắt sự kiện click vào nút "Lưu"
             $("#submitOrder").click(function () {
-                console.log("Type " + selectedItem);
-                // Gửi request POST đến URL "/Order/Save" với dữ liệu là productList
+                // Hiển thị popup
+
+                 if(productList.length==0){
+                    $("#failure-popup p").text("Thêm không thành công!");
+                    $("#failure-popup").show();
+                    console.log("Thêm thất bại!");
+                    setTimeout(function () {
+                        $("#failure-popup").hide();
+                    }, 2000);
+                  
+                }else{
+                    $("#confirm-popup").show();
+                }
+                
+            });
+            // Bắt sự kiện click vào nút "Confirm"
+            $("#confirm-btn").click(function () {
+               
+                // Gửi request POST đến URL "/Sales/Save" với dữ liệu là productList
                 $.ajax({
                     url: "/Sales/Save",
                     type: "POST",
@@ -758,18 +939,35 @@
                     success: function (response) {
                         // Xử lý kết quả trả về từ server (nếu cần)
                         console.log("controller trả về" + response);
-                        alert("Thêm thành công");
-                        window.location.href = "/Sales/Index";
+                        //alert("Thêm thành công");
+                        //window.location.href = "/Sales/Index";
+                        $("#success-popup").show();
+                        //alert("Lưu thành công");
+                        setTimeout(function () {
+                            window.location.href = "/Sales/Index";
+                        }, 2000);
                     },
                     error: function (xhr, status, error) {
                         // Xử lý lỗi
                         alert("Lưu không thành công");
                         console.log("Lỗi: " + error);
                         console.log(xhr.responseText);
+                        $("#failure-popup").show();
+                        setTimeout(function () {
+                            window.location.href = "/Sales/Index";
+                        }, 2000);
                     }
                 });
+                // Ẩn popup
+                $("#confirm-popup").hide();
+            });
+            // Bắt sự kiện click vào nút "Cancel"
+            $("#cancel-btn").click(function () {
+                // Ẩn popup
+                $("#confirm-popup").hide();
             });
         });
+
 
         $("input[data-type='currency']").on({
             keyup: function () {

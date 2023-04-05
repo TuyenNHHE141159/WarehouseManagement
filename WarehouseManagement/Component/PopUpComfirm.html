@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        #confirm-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="confirm-popup">
+        <div class="popup">
+            <p>Are you sure you want to delete this item?</p>
+            <button id="confirm-btn">Confirm</button>
+            <button id="cancel-btn">Cancel</button>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    const openPopupBtn = document.getElementById('open-popup');
+    const confirmPopup = document.getElementById('confirm-popup');
+    const confirmBtn = document.getElementById('confirm-btn');
+    const cancelBtn = document.getElementById('cancel-btn');
+
+    openPopupBtn.addEventListener('click', () => {
+        confirmPopup.style.display = 'block';
+    });
+
+    confirmBtn.addEventListener('click', () => {
+        // Xử lý hành động xác nhận ở đây
+        confirmPopup.style.display = 'none';
+    });
+
+    cancelBtn.addEventListener('click', () => {
+        confirmPopup.style.display = 'none';
+    });
+
+</script>
