@@ -25,6 +25,10 @@ namespace WarehouseManagement.Controllers
         public IActionResult Index()
         {
             string accountJson = HttpContext.Session.GetString("Account");
+            if (accountJson == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
             var top4Product = context.Products.OrderByDescending(p=>p.Id).Take(4).Select(p=> new {p.Id,p.Name,p.QuantityInStock});
             List<Product> products = new List<Product>();
             foreach(var p in top4Product)

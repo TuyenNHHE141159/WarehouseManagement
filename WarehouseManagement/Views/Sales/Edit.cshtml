@@ -1022,43 +1022,43 @@
         for (var i = 0; i < deleteButtons.length; i++) {
             deleteButtons[i].addEventListener("click", function () {
 
-                  var row = this.parentNode.parentNode;
-                    var productDeleId = this.getAttribute("value");
-                    var deletedProduct = productList.find(product => product.productId === productDeleId);                 
-                    var comfirmDelete = document.getElementById('confirm-popup-delete');
-                    var comfirm = document.getElementById('confirm-btn-delete');
-                    var cancel = document.getElementById('cancel-btn-delete');
-                    comfirmDelete.style.display = 'block';
-                    comfirm.addEventListener('click', function () {
-                        // Remove the row
-                        if(row!==null){
-                            row.remove();
-                        }
-                        // Update the cost
-                        cost = cost - deletedProduct.quantity * deletedProduct.price;
-                        const formattedNumber1 = cost.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-                        $("#cost").val(formattedNumber1);
+                var row = this.parentNode.parentNode;
+                var productDeleId = this.getAttribute("value");
+                var deletedProduct = productList.find(product => product.productId === productDeleId);
+                var comfirmDelete = document.getElementById('confirm-popup-delete');
+                var comfirm = document.getElementById('confirm-btn-delete');
+                var cancel = document.getElementById('cancel-btn-delete');
+                comfirmDelete.style.display = 'block';
+                comfirm.addEventListener('click', function () {
+                    // Remove the row
+                    if (row !== null) {
+                        row.remove();
+                    }
+                    // Update the cost
+                    cost = cost - deletedProduct.quantity * deletedProduct.price;
+                    const formattedNumber1 = cost.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                    $("#cost").val(formattedNumber1);
 
-                        console.log("Product bị xóa " + deletedProduct.productId + deletedProduct.quantity + deletedProduct.price);
+                    console.log("Product bị xóa " + deletedProduct.productId + deletedProduct.quantity + deletedProduct.price);
 
-                        productList = productList.filter(product => product.productId !== productDeleId);
-                        console.log(productList);
-                        //deletedProduct = null;
-                        deletedProduct = null;
-                        productDeleId = null;
-                        row = null;
-                        // Hide the confirmation popup
-                        comfirmDelete.style.display = 'none';
-                    });
+                    productList = productList.filter(product => product.productId !== productDeleId);
+                    console.log(productList);
+                    //deletedProduct = null;
+                    deletedProduct = null;
+                    productDeleId = null;
+                    row = null;
+                    // Hide the confirmation popup
+                    comfirmDelete.style.display = 'none';
+                });
 
-                    // Add an event listener for the cancel button inside the popup
-                    cancel.addEventListener('click', function () {
-                        // Hide the confirmation popup
-                        comfirmDelete.style.display = 'none';
-                        deletedProduct = null;
-                        productDeleId=null;
-                        row=null;
-                    });
+                // Add an event listener for the cancel button inside the popup
+                cancel.addEventListener('click', function () {
+                    // Hide the confirmation popup
+                    comfirmDelete.style.display = 'none';
+                    deletedProduct = null;
+                    productDeleId = null;
+                    row = null;
+                });
             });
             console.log(productList + " after delete");
         }

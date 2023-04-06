@@ -504,7 +504,7 @@
                                         <tr>
                                             <td>@o.Id</td>
                                             <td>@(o.OrderType.Trim() == "import" ? "nhập kho" : "xuất kho")</td>
-                                            <td>@o.OrderDate?.ToString("dd/MM/yyyy").Trim()</td>
+                                            <td>@o.OrderDate?.ToString("dd/MM/yyyy  hh:mm:ss").Trim()</td>
                                             <td>@o.CreatedBy</td>
                                             <td class="text-center">
                                                 <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">

@@ -20,7 +20,7 @@ namespace WarehouseManagement.Controllers
             //// Deserialize the account object from JSON
             if (accountJson == null)
             {
-                return RedirectToAction("Index", "Error");
+                return RedirectToAction("Index", "Login");
             }
             Account account = JsonSerializer.Deserialize<Account>(accountJson);
             
@@ -28,9 +28,10 @@ namespace WarehouseManagement.Controllers
             var count = context.AccountRoles.Count(m=>m.AccountId==account.AccountId && (m.RoleId==1 || m.RoleId==2));
             if (count == 0)
             {
-                return RedirectToAction("Index", "Error");
+                TempData["ErrorMessage"] = "Bạn không có quyền truy cập trang này";
+                return RedirectToAction("Index", "Home");
             }
-            return View(context.Orders.ToList());      
+            return View(context.Orders.OrderBy(o=>o.OrderDate).ToList());      
         }
 
         // GET: SalesController/Details/5
@@ -38,6 +39,10 @@ namespace WarehouseManagement.Controllers
         {
             string accountJson = HttpContext.Session.GetString("Account");
             //// Deserialize the account object from JSON
+             if (accountJson == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
             Account account = JsonSerializer.Deserialize<Account>(accountJson);
             // int role_id = (int)HttpContext.Session.GetInt32("role_id");
             var count = context.AccountRoles.Count(m => m.AccountId == account.AccountId && (m.RoleId == 1 || m.RoleId == 2));
@@ -47,7 +52,8 @@ namespace WarehouseManagement.Controllers
             }
             if (count == 0)
             {
-                return RedirectToAction("Index", "Error");
+                TempData["ErrorMessage"] = "Bạn không có quyền truy cập trang này";
+                return RedirectToAction("Index", "Home");
             }
             var order = dao.GetOrderDetailsByID(id);
             var customerName = from c in context.Customers
@@ -83,12 +89,17 @@ namespace WarehouseManagement.Controllers
                 return RedirectToAction("Index", "Error");
             }
             //// Deserialize the account object from JSON
+            if (accountJson == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
             Account account = JsonSerializer.Deserialize<Account>(accountJson);
             // int role_id = (int)HttpContext.Session.GetInt32("role_id");
             var count = context.AccountRoles.Count(m => m.AccountId == account.AccountId && (m.RoleId == 1 ));
             if (count == 0)
             {
-                return RedirectToAction("Index", "Error");
+                TempData["ErrorMessage"] = "Bạn không có quyền truy cập trang này";
+                return RedirectToAction("Index", "Home");
             }
             return View();
         }
@@ -122,7 +133,7 @@ namespace WarehouseManagement.Controllers
                 string accountJson = HttpContext.Session.GetString("Account");
                 if (accountJson == null)
                 {
-                    return RedirectToAction("Index", "Error");
+                    return RedirectToAction("Index", "Login");
                 }
                 //// Deserialize the account object from JSON
                 Account account = JsonSerializer.Deserialize<Account>(accountJson);
@@ -130,7 +141,8 @@ namespace WarehouseManagement.Controllers
                 var count = context.AccountRoles.Count(m => m.AccountId == account.AccountId && (m.RoleId == 1));
                 if (count == 0)
                 {
-                    return RedirectToAction("Index", "Error");
+                    TempData["ErrorMessage"] = "Bạn không có quyền truy cập trang này";
+                    return RedirectToAction("Index", "Home");
                 }
                 List<OrderDetails> orderDetails = model.OrderDetails;
                 if (orderDetails.Count == 0)
@@ -182,12 +194,17 @@ namespace WarehouseManagement.Controllers
         {
             string accountJson = HttpContext.Session.GetString("Account");
             //// Deserialize the account object from JSON
+            if (accountJson == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
             Account account = JsonSerializer.Deserialize<Account>(accountJson);
             // int role_id = (int)HttpContext.Session.GetInt32("role_id");
             var count = context.AccountRoles.Count(m => m.AccountId == account.AccountId && (m.RoleId == 1));
             if (count == 0)
             {
-                return RedirectToAction("Index","Error");
+                TempData["ErrorMessage"] = "Bạn không có quyền truy cập trang này";
+                return RedirectToAction("Index", "Home");
             }
             var customerName = from c in context.Customers
                                join o in context.Orders on c.Id equals o.CustomerId
@@ -216,7 +233,7 @@ namespace WarehouseManagement.Controllers
                 string accountJson = HttpContext.Session.GetString("Account");
                 if (accountJson == null)
                 {
-                    return RedirectToAction("Index", "Error");
+                    return RedirectToAction("Index", "Login");
                 }
                 //// Deserialize the account object from JSON
                 Account account = JsonSerializer.Deserialize<Account>(accountJson);

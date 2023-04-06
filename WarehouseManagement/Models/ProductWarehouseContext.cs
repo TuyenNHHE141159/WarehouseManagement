@@ -152,7 +152,7 @@ namespace WarehouseManagement.Models
                     .HasColumnName("note");
 
                 entity.Property(e => e.OrderDate)
-                    .HasColumnType("date")
+                    .HasColumnType("datetime")
                     .HasColumnName("order_date");
 
                 entity.Property(e => e.OrderType)

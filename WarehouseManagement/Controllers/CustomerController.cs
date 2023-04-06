@@ -24,8 +24,16 @@ namespace WarehouseManagement.Controllers
         [HttpPost]
         public IActionResult Add(string name, string phone)
         {
-
-            return View();
+            Customer customer = new Customer();
+            customer.Name = name;
+            customer.Phone = phone;
+            context.Customers.Add(customer);
+            int t= context.SaveChanges();
+            if (t == 0)
+            {
+              return View();
+            }
+            return RedirectToAction("Index", "Customer");
         }
         public IActionResult List(int customerId)
         {
