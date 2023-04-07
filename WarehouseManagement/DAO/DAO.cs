@@ -55,6 +55,38 @@ namespace WarehouseManagement.Controllers
             }
             return orders;
         }
+        //get order_product by order id
+        public List<OrderProduct> GetOrderDetailByOrderId(int orderId)
+        {
+            List<OrderProduct> orders = new List<OrderProduct>();
+            DbProviderFactory factory = SqlClientFactory.Instance;
+            using DbConnection connection = factory.CreateConnection();
+            if (connection == null)
+            {
+                return null;
+            }
+            connection.ConnectionString = GetConnectionString();
+            connection.Open();
+            DbCommand command = connection.CreateCommand();
+            if (command == null)
+            {
+                return null;
+            }
+            command.Connection = connection;
+            command.CommandText = "select * from Order_Product where order_id= "+orderId;
+            using DbDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                
+                OrderProduct order = new OrderProduct();
+                order.OrderId = reader.GetInt32(0);
+                order.ProductId = reader.GetInt32(1);
+                order.Quantity = reader.GetInt32(2);
+                order.Price = reader.GetDouble(3);
+                orders.Add(order);
+            }
+            return orders;
+        }
         public List<Order> GetOrdersProcedure(int pageNumber, int pageSize)
         {
             List<Order> orders = new List<Order>();

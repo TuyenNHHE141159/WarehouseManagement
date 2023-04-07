@@ -9,12 +9,12 @@ using WarehouseManagement.Models;
 namespace WarehouseManagement.Controllers
 {
 
-    public class LoginController: Controller
+    public class LoginController : Controller
     {
         DAO dao = new DAO();
         private readonly ProductWarehouseContext context;
         public LoginController(ProductWarehouseContext context)
-        {      
+        {
             this.context = context;
         }
 
@@ -25,17 +25,14 @@ namespace WarehouseManagement.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Remove("Account");
-           
+
             return View("Index", "Login");
         }
         [HttpPost]
         public IActionResult Login(string username, string password)
         {
-       
-     
-     Account account = dao.Login(username, password);
-    // List<AccountRole> roles = account.AccountRoles.ToList();
-            
+            Account account = dao.Login(username, password);
+            // List<AccountRole> roles = account.AccountRoles.ToList();
             if (account == null)
             {
                 ViewBag.Message = "Login failed";
@@ -53,8 +50,8 @@ namespace WarehouseManagement.Controllers
 
                 //// Deserialize the account object from JSON
                 //Account account = JsonSerializer.Deserialize<Account>(accountJson);
-                return RedirectToAction("Index","Home");
-            }  
+                return RedirectToAction("Index", "Home");
+            }
         }
     }
 }

@@ -411,14 +411,15 @@
                                         </tr>
                                     }
                                 </tbody>
-                            </table>
+                            </table>            
+                            <button class="btn-danger" value="@ViewBag.OrderId" id="btn-delete">Xóa</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+    
 
     <script data-cfasync="false" src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script src="~/assets/js/jquery-3.6.0.min.js"></script>
@@ -438,5 +439,25 @@
     <script src="~/assets/plugins/sweetalert/sweetalerts.min.js"></script>
 
     <script src="~/assets/js/script.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#btn-delete').click(function () {
+                var orderId = $(this).val(); // Lấy giá trị của thuộc tính "value" của button
+
+                $.ajax({
+                    url: '/Sales/Delete',
+                    type: 'POST',
+                    data: { id: orderId }, // Truyền dữ liệu cho controller
+                    success: function (result) {
+                        // Thực hiện các xử lý sau khi xóa thành công
+                        window.location.href = "/Sales/Index";
+                    },
+                    error: function () {
+                        // Thông báo lỗi nếu có
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

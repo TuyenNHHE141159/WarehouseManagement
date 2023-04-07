@@ -13,20 +13,36 @@ namespace WarehouseManagement.Controllers
     {
         private readonly ProductWarehouseContext  context= new ProductWarehouseContext();
         private readonly DAO  dao= new DAO();
+        const int roleAdmin= 1;
+        const int roleStaff = 2;
+        const int nullUser = 1;
+        const int noAuthorization = 2;
+        const int hadAuthorization = 3;
+
         // GET: SalesController
-        public ActionResult Index()
+        public bool verifyAccount(int roleID)
         {
             string accountJson = HttpContext.Session.GetString("Account");
             //// Deserialize the account object from JSON
             if (accountJson == null)
             {
-                return RedirectToAction("Index", "Login");
+                 RedirectToAction("Index", "Login");
             }
             Account account = JsonSerializer.Deserialize<Account>(accountJson);
-            
-            // int role_id = (int)HttpContext.Session.GetInt32("role_id");
-            var count = context.AccountRoles.Count(m=>m.AccountId==account.AccountId && (m.RoleId==1 || m.RoleId==2));
+            var count = context.AccountRoles.Count(m => m.AccountId == account.AccountId && m.RoleId == roleID);
             if (count == 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public ActionResult Index()
+        {
+            if (verifyAccount(roleStaff) == false)
             {
                 TempData["ErrorMessage"] = "Bạn không có quyền truy cập trang này";
                 return RedirectToAction("Index", "Home");
@@ -37,20 +53,7 @@ namespace WarehouseManagement.Controllers
         // GET: SalesController/Details/5
         public ActionResult Details(int id)
         {
-            string accountJson = HttpContext.Session.GetString("Account");
-            //// Deserialize the account object from JSON
-             if (accountJson == null)
-            {
-                return RedirectToAction("Index", "Login");
-            }
-            Account account = JsonSerializer.Deserialize<Account>(accountJson);
-            // int role_id = (int)HttpContext.Session.GetInt32("role_id");
-            var count = context.AccountRoles.Count(m => m.AccountId == account.AccountId && (m.RoleId == 1 || m.RoleId == 2));
-            if (id == null)
-            {
-                return NotFound();
-            }
-            if (count == 0)
+            if (verifyAccount(roleStaff) == false)
             {
                 TempData["ErrorMessage"] = "Bạn không có quyền truy cập trang này";
                 return RedirectToAction("Index", "Home");
@@ -83,23 +86,10 @@ namespace WarehouseManagement.Controllers
         // GET: SalesController/Create
         public ActionResult Create()
         {
-            string accountJson = HttpContext.Session.GetString("Account");
-            if (accountJson == null)
-            {
-                return RedirectToAction("Index", "Error");
-            }
-            //// Deserialize the account object from JSON
-            if (accountJson == null)
-            {
-                return RedirectToAction("Index", "Login");
-            }
-            Account account = JsonSerializer.Deserialize<Account>(accountJson);
-            // int role_id = (int)HttpContext.Session.GetInt32("role_id");
-            var count = context.AccountRoles.Count(m => m.AccountId == account.AccountId && (m.RoleId == 1 ));
-            if (count == 0)
+            if (verifyAccount(roleAdmin) == false)
             {
                 TempData["ErrorMessage"] = "Bạn không có quyền truy cập trang này";
-                return RedirectToAction("Index", "Home");
+               return RedirectToAction("Index", "Home");
             }
             return View();
         }
@@ -149,6 +139,20 @@ namespace WarehouseManagement.Controllers
                 {
                     return BadRequest("Null value");
                 }
+
+                if (model.SelectedItem.Equals("export"))
+                {
+                    foreach(var item in orderDetails)
+                    {
+                        int exportQ = item.quantity;
+                        int productId = item.productId;
+                        Product product= context.Products.Find(item.productId);
+                        if (exportQ > product.QuantityInStock)
+                        {
+                            return View("Index","Sales");
+                        }
+                    }
+                }
                 string selectedItem = model.SelectedItem;
                 Order order = new Order();
                 order.OrderType = selectedItem;
@@ -163,6 +167,18 @@ namespace WarehouseManagement.Controllers
                     op.ProductId = o.productId;
                     op.OrderId = order.Id;
                     op.Quantity = o.quantity;
+
+                    int quantity = o.quantity;
+                    int productId = o.productId;
+                    Product product = context.Products.Find(o.productId);
+                    if (selectedItem.Equals("import"))
+                    {
+                        product.QuantityInStock += quantity;
+                    }
+                    else
+                    {
+                        product.QuantityInStock -= quantity;
+                    }
                     op.Price = o.price;
                     context.OrderProducts.Add(op);
                     context.SaveChanges();
@@ -192,16 +208,7 @@ namespace WarehouseManagement.Controllers
         // GET: SalesController/Edit/5
         public ActionResult Edit(int id, string type)
         {
-            string accountJson = HttpContext.Session.GetString("Account");
-            //// Deserialize the account object from JSON
-            if (accountJson == null)
-            {
-                return RedirectToAction("Index", "Login");
-            }
-            Account account = JsonSerializer.Deserialize<Account>(accountJson);
-            // int role_id = (int)HttpContext.Session.GetInt32("role_id");
-            var count = context.AccountRoles.Count(m => m.AccountId == account.AccountId && (m.RoleId == 1));
-            if (count == 0)
+            if (verifyAccount(roleAdmin) == false)
             {
                 TempData["ErrorMessage"] = "Bạn không có quyền truy cập trang này";
                 return RedirectToAction("Index", "Home");
@@ -230,18 +237,10 @@ namespace WarehouseManagement.Controllers
         {
             try
             {
-                string accountJson = HttpContext.Session.GetString("Account");
-                if (accountJson == null)
+                if (verifyAccount(roleAdmin) == false)
                 {
-                    return RedirectToAction("Index", "Login");
-                }
-                //// Deserialize the account object from JSON
-                Account account = JsonSerializer.Deserialize<Account>(accountJson);
-                // int role_id = (int)HttpContext.Session.GetInt32("role_id");
-                var count = context.AccountRoles.Count(m => m.AccountId == account.AccountId && (m.RoleId == 1));
-                if (count == 0)
-                {
-                    return RedirectToAction("Index", "Error");
+                    TempData["ErrorMessage"] = "Bạn không có quyền truy cập trang này";
+                    return RedirectToAction("Index", "Home");
                 }
                 List<OrderDetails> orderDetails = model.OrderDetails;
                 if (orderDetails.Count == 0)
@@ -249,14 +248,51 @@ namespace WarehouseManagement.Controllers
                     return BadRequest("Null value");
                 }
                 string selectedItem = model.SelectedItem;
+               
+
+                //xử lý list order cũ trước khi sửa
+                List<OrderProduct> productList = dao.GetOrderDetailByOrderId(model.OrderId);
+                if(productList.Count > 0)
+                {
+                    foreach (var product in productList)
+                    {
+                        int oldQuantity= (int)product.Quantity;
+                        int oldProductId= (int) product.ProductId;
+                        Product currentProduct = context.Products.Find(oldProductId);
+                        if (currentProduct != null)
+                        {
+                            if (selectedItem.Equals("import"))
+                            {
+                                currentProduct.QuantityInStock -= oldQuantity;
+                            }
+                            else
+                            {
+                                currentProduct.QuantityInStock += oldQuantity;
+                            }
+                        }
+                    }
+                }
+
                 bool delete = dao.DeleteAllOrder(model.OrderId);
 
+                //xử lý list order mới sau khi sửa
                 foreach (var o in orderDetails)
                 {
                     OrderProduct op = new OrderProduct();
                     op.ProductId = o.productId;
                     op.OrderId = model.OrderId;
                     op.Quantity = o.quantity;
+                     int quantity = o.quantity;
+                    int productId = o.productId;
+                    Product product = context.Products.Find(o.productId);
+                    if (selectedItem.Equals("import"))
+                    {
+                        product.QuantityInStock += quantity;
+                    }
+                    else
+                    {
+                        product.QuantityInStock -= quantity;
+                    }
                     op.Price = o.price;
                     context.OrderProducts.Add(op);
                     context.SaveChanges();
@@ -272,24 +308,49 @@ namespace WarehouseManagement.Controllers
         }
 
         // GET: SalesController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult DeleteView(int id)
         {
             return View();
         }
 
         // POST: SalesController/Delete/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        //[ValidateAntiForgeryToken]
+        public ActionResult Delete(int id)
         {
-            try
+            if (verifyAccount(roleAdmin) == false)
             {
-                return RedirectToAction(nameof(Index));
+                TempData["ErrorMessage"] = "Bạn không có quyền truy cập trang này";
+                RedirectToAction("Index", "Home");
             }
-            catch
+            string type = context.Orders.Find(id).OrderType;       
+            List<OrderProduct> productList = dao.GetOrderDetailByOrderId(id);
+            if (productList.Count > 0)
             {
-                return View();
+                foreach (var product in productList)
+                {
+                    int oldQuantity = (int)product.Quantity;
+                    int oldProductId = (int)product.ProductId;
+                    Product currentProduct = context.Products.Find(oldProductId);
+                    if (currentProduct != null)
+                    {
+                        if (type.Equals("import"))
+                        {
+                            currentProduct.QuantityInStock -= oldQuantity;
+                        }
+                        else
+                        {
+                            currentProduct.QuantityInStock += oldQuantity;
+                        }
+                    }
+                }
             }
+            bool delete = dao.DeleteAllOrder(id);
+            Order deleteOrder= context.Orders.Find(id);
+            context.Orders.Remove(deleteOrder);
+            context.SaveChanges();
+            return RedirectToAction("Index","Sales");
+            
         }
     }
 }
